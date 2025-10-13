@@ -7,11 +7,11 @@ public class OrientationChange : MonoBehaviour
 {
   [SerializeField] private RectTransform UIWrapper;
   [SerializeField] private CanvasScaler CanvasScaler;
-  [SerializeField] private float MatchWidth = 0.25f;
+  [SerializeField] private float MatchWidth = 0f;
   [SerializeField] private float MatchHeight = 1f;
   [SerializeField] private float PortraitMatchWandH = 0.5f;
-  [SerializeField] private float transitionDuration = 0.5f;
-  [SerializeField] private float waitForRotation = 1f;
+  [SerializeField] private float transitionDuration = 0.2f;
+  [SerializeField] private float waitForRotation = 0.2f;
 
   private Vector2 ReferenceAspect;
   private Tween matchTween;
@@ -62,9 +62,9 @@ public class OrientationChange : MonoBehaviour
 #if UNITY_EDITOR
   private void Update()
   {
-    if (Input.GetKeyDown(KeyCode.K))
+    if (Input.GetKeyDown(KeyCode.Space))
     {
-      SwitchDisplay(Screen.width + "," + Screen.height);  
+      SwitchDisplay(Screen.width + "," + Screen.height);
     }
   }
 #endif
