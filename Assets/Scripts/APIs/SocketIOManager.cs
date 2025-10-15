@@ -457,7 +457,8 @@ public class SocketIOManager : MonoBehaviour
     private void PopulateSlotSocket(List<string> slotPop)
     {
         uIManager.RaycastPanel.SetActive(false);
-        slotManager.shuffleInitialMatrix();
+        slotManager.InitializeMatrix();
+        // slotManager.shuffleInitialMatrix();
         //for (int i = 0; i < slotPop.Count; i++)
         //{
         //    List<int> points = slotPop[i]?.Split(',')?.Select(Int32.Parse)?.ToList();
