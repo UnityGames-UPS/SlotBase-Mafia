@@ -11,6 +11,7 @@ public class BonusController : MonoBehaviour
     private GameObject Bonus_Object;
     [SerializeField]
     private SlotBehaviour slotManager;
+    private UIManager uimanager;
     [SerializeField]
     private GameObject raycastPanel;
     [SerializeField]
@@ -36,15 +37,15 @@ public class BonusController : MonoBehaviour
         index = 0;
         CaseValues.Clear();
         CaseValues.TrimExcess();
-        
+
         totalWin = 0;
         for (int i = 0; i < BonusCases.Count; i++)
         {
             BonusCases[i].ResetCase(i);
         }
-        
 
-       
+
+
 
         if (raycastPanel) raycastPanel.SetActive(false);
         StartBonus();
@@ -60,8 +61,9 @@ public class BonusController : MonoBehaviour
         BonusWinPopup.parent.gameObject.SetActive(true);
         BonusWinPopup.localScale = Vector3.zero;
         BonusWintext.text = totalWin.ToString();
-        BonusWinPopup.DOScale(1,1f).SetEase(Ease.OutBounce);
-        DOVirtual.DelayedCall(3f, ()=> {
+        BonusWinPopup.DOScale(1, 1f).SetEase(Ease.OutBounce);
+        DOVirtual.DelayedCall(3f, () =>
+        {
 
             slotManager.CheckPopups = false;
             _audioManager.SwitchBGSound(false);
@@ -89,7 +91,7 @@ public class BonusController : MonoBehaviour
 
     internal void PlayWinLooseSound(bool isWin)
     {
-        if(isWin)
+        if (isWin)
         {
             _audioManager.PlayBonusAudio("win");
         }
@@ -102,6 +104,10 @@ public class BonusController : MonoBehaviour
     private void StartBonus()
     {
         _audioManager.SwitchBGSound(true);
-        if (Bonus_Object) Bonus_Object.SetActive(true);
+        if (Bonus_Object)
+        {
+            uimanager.BonusPopupClose();
+            Bonus_Object.SetActive(true);
+        }
     }
 }
