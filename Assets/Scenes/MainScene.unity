@@ -3495,6 +3495,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Bonus_Object: {fileID: 1562590892}
   slotManager: {fileID: 920668077}
+  uimanager: {fileID: 172002248}
   raycastPanel: {fileID: 1219654078}
   BonusCases:
   - {fileID: 221580477}
@@ -9474,7 +9475,7 @@ MonoBehaviour:
   uIManager: {fileID: 172002248}
   JSManager: {fileID: 912940355}
   TestSocketURI: http://localhost:5000/
-  TestToken: 40d8c97fe8184fc7bd21e1ce0c48edf4
+  TestToken: a05f74900acb4e879bff7ec162c35729
 --- !u!4 &565016897
 Transform:
   m_ObjectHideFlags: 0

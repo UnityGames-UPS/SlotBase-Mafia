@@ -375,6 +375,10 @@ public class UIManager : MonoBehaviour
         {
             if (MainPopup_Object) MainPopup_Object.SetActive(false);
         }
+        if (Popup == WinPopup_Object || Popup == jackpot_Object)
+        {
+            if (WinMainPopup_Object) WinMainPopup_Object.SetActive(false);
+        }
     }
 
     internal void ReconnectionPopup()
