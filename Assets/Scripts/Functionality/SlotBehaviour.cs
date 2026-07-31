@@ -563,9 +563,14 @@ public class SlotBehaviour : MonoBehaviour
 
     private void OnApplicationFocus(bool focus)
     {
+        audioController.SetMuteAll(!focus);
+    }
 
-        audioController.CheckFocusFunction(focus, CheckSpinAudio);
-
+    internal void UpdateBalanceDisplay(double newBalance)
+    {
+        currentbalance = newBalance;
+        if (balance_text) balance_text.text = newBalance.ToString("f3");
+        Comparebalance();
     }
     private IEnumerator TweenRoutine()
     {

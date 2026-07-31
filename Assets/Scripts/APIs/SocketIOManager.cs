@@ -69,6 +69,13 @@ public class SocketIOManager : MonoBehaviour
   private const int MaxMissedPongs = 5;
   private Coroutine PingRoutine; //Back2 end
 
+  private bool hasFocus = true;
+  private float focusLostTime = 0f;
+  private Coroutine focusCheckRoutine;
+  private float maxBackgroundTime = 60f;
+  private bool isExiting = false;
+  private bool isBeingDestroyed = false;
+
   private void Awake()
   {
     // Debug.unityLogger.logEnabled = false;
@@ -192,13 +199,13 @@ public class SocketIOManager : MonoBehaviour
     // Set subscriptions
     gameSocket.On<ConnectResponse>(SocketIOEventTypes.Connect, OnConnected);
     gameSocket.On(SocketIOEventTypes.Disconnect, OnDisconnected); //Back2 Start
-    gameSocket.On(SocketIOEventTypes.Error, OnError); //Back2 Start
     gameSocket.On<string>("game:init", OnListenEvent);
     gameSocket.On<string>("result", OnResult);
     gameSocket.On<bool>("socketState", OnSocketState);
     gameSocket.On<string>("internalError", OnSocketError);
     gameSocket.On<string>("pong", OnPongReceived); //Back2 Start
     gameSocket.On<string>("AnotherDevice", OnSocketOtherDevice); //BackendChanges Finish
+    gameSocket.On<string>("balance:sync", OnBalanceSync);
     gameSocket.On<Error>(SocketIOEventTypes.Error, OnError);
     // Start connecting to the server
     this.manager.Open();
@@ -238,6 +245,66 @@ public class SocketIOManager : MonoBehaviour
 #endif
     }
   }
+
+  private void OnDestroy()
+  {
+    isBeingDestroyed = true;
+  }
+
+  internal void HandleFocusChange(bool focus)
+  {
+    hasFocus = focus;
+    if (!focus)
+    {
+      focusLostTime = Time.time;
+      if (focusCheckRoutine == null && !isExiting && !isBeingDestroyed)
+        focusCheckRoutine = StartCoroutine(FocusTimeoutCheck());
+    }
+    else if (focusCheckRoutine != null)
+    {
+      StopCoroutine(focusCheckRoutine);
+      focusCheckRoutine = null;
+    }
+  }
+
+  private IEnumerator FocusTimeoutCheck()
+  {
+    while (!hasFocus && !isExiting && !isBeingDestroyed)
+    {
+      if (Time.time - focusLostTime >= maxBackgroundTime)
+      {
+        Debug.LogWarning("[SOCKET] Background timeout — closing connection");
+        isConnected = false;
+        ResetPingRoutine();
+
+        if (manager != null)
+        {
+          try { manager.Close(); }
+          catch (Exception e) { Debug.LogWarning($"[SOCKET] Focus close error: {e.Message}"); }
+        }
+
+        uIManager.DisconnectionPopup();
+        focusCheckRoutine = null;
+        yield break;
+      }
+
+      yield return new WaitForSecondsRealtime(1f);
+    }
+
+    focusCheckRoutine = null;
+  }
+
+  private void OnBalanceSync(string data)
+  {
+    BalanceSyncPayload syncPayload = JsonConvert.DeserializeObject<BalanceSyncPayload>(data);
+    if (syncPayload == null) return;
+
+    if (PlayerData == null) PlayerData = new Player();
+    PlayerData.balance = syncPayload.balance;
+
+    slotManager.UpdateBalanceDisplay(syncPayload.balance);
+  }
+
   private void SendPing()
   {
     ResetPingRoutine();
@@ -285,7 +352,6 @@ public class SocketIOManager : MonoBehaviour
       // Send next ping
       waitingForPong = true;
       lastPongTime = Time.time;
-      Debug.Log("📤 Sending ping...");
       SendDataWithNamespace("ping");
       yield return new WaitForSeconds(pingInterval);
     }
@@ -299,16 +365,14 @@ public class SocketIOManager : MonoBehaviour
   } //Back2 end
   private void OnPongReceived(string data) //Back2 Start
   {
-    Debug.Log("✅ Received pong from server.");
     waitingForPong = false;
     missedPongs = 0;
     lastPongTime = Time.time;
-    Debug.Log($"⏱️ Updated last pong time: {lastPongTime}");
-    Debug.Log($"📦 Pong payload: {data}");
   } //Back2 end
 
   internal IEnumerator CloseSocket() //Back2 Start
   {
+    isExiting = true;
     uIManager.RaycastPanel.SetActive(true);
     ResetPingRoutine();
 
@@ -327,16 +391,6 @@ public class SocketIOManager : MonoBehaviour
     JSManager.SendCustomMessage("OnExit"); //Telling the react platform user wants to quit and go back to homepage
 #endif
   } //Back2 end
-
-  private void OnError(string response)
-  {
-    Debug.LogError("Error: " + response);
-  }
-
-  private void OnError()
-  {
-    Debug.LogError("Socket Error");
-  }
 
   private void OnListenEvent(string data)
   {
@@ -758,6 +812,12 @@ public class Paylines
 public class Player
 {
   public double balance { get; set; }
+}
+
+[Serializable]
+public class BalanceSyncPayload
+{
+  public double balance;
 }
 
 

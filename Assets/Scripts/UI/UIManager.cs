@@ -88,6 +88,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private AudioController audioController;
     [SerializeField] private SlotBehaviour slotManager;
     [SerializeField] private SocketIOManager socketManager;
+    [SerializeField] private JSFunctCalls jsFunctCalls;
 
     [Header("Free Spins")]
     [SerializeField] private Image freeSpinBar;
@@ -128,6 +129,16 @@ public class UIManager : MonoBehaviour
         // if (spalsh_screen) spalsh_screen.SetActive(true);
         // StartCoroutine(LoadingRoutine());
 
+        if (jsFunctCalls != null)
+            jsFunctCalls.RegisterVisibilityListener(gameObject.name);
+    }
+
+    public void OnFocusChanged(string value)
+    {
+        bool focused = value == "1";
+        Debug.Log("UNITY FOCUS CHANGED: " + value + " (focused: " + focused + ")");
+        audioController?.SetMuteAll(focused ? !isSound : true);
+        socketManager?.HandleFocusChange(focused);
     }
 
     private void Start()
