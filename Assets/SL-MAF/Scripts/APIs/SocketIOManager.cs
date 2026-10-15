@@ -22,17 +22,17 @@ public class SocketIOManager : MonoBehaviour
   internal UiData UIData = null;
   internal Root ResultData = null;
   internal Player PlayerData = null;
-  internal Root GambleData = null;
+  private Root GambleData = null;
   internal Root bonusData = new();
-  internal List<List<int>> LineData = null;
-  internal List<int> BonusData = null;
+  private List<List<int>> LineData = null;
+  private List<int> BonusData = null;
   //WebSocket currentSocket = null;
   internal bool isResultdone = false;
 
 
-  [SerializeField] internal JSFunctCalls JSManager;
+  [SerializeField] private JSFunctCalls JSManager;
   // protected string nameSpace="game"; //BackendChanges
-  protected string nameSpace = "playground"; //BackendChanges
+  private string nameSpace = "playground"; //BackendChanges
   private Socket gameSocket; //BackendChanges
 
   private SocketManager manager;
@@ -40,17 +40,17 @@ public class SocketIOManager : MonoBehaviour
   //[SerializeField]
   //private string SocketURI;
 
-  protected string SocketURI = null;
+  private string SocketURI = null;
   //  protected string TestSocketURI = "https://game-crm-rtp-backend.onrender.com/";
-  [SerializeField] protected string TestSocketURI = "http://localhost:5001";
+  [SerializeField] private string TestSocketURI = "http://localhost:5001";
 
   [SerializeField] private string TestToken;
-  protected string gameID = "SL-MAF";
+  private string gameID = "SL-MAF";
   //protected string gameID = "";
 
   internal bool isLoading;
 
-  internal bool SetInit = false;
+  private bool SetInit = false;
   private const int maxReconnectionAttempts = 6;
   private readonly TimeSpan reconnectionDelay = TimeSpan.FromSeconds(10);
 

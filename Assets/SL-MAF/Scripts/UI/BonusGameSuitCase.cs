@@ -22,8 +22,8 @@ public class BonusGameSuitCase : MonoBehaviour
     [SerializeField] private BonusController _bonusManager;
 
     [SerializeField]
-    internal bool isOpen;
-    internal int index=0;
+    private bool isOpen;
+    private int index=0;
 
     private Tween shakeTween;
 

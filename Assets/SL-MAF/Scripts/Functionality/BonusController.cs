@@ -25,7 +25,7 @@ public class BonusController : MonoBehaviour
     private List<int> CaseValues;
 
     int index = 0;
-    internal double bet = 0;
+    private double bet = 0;
     internal double totalWin = 0;
     internal bool isAnimating = false;
 
@@ -76,7 +76,7 @@ public class BonusController : MonoBehaviour
 
     }
 
-    internal int GetValue()
+    private int GetValue()
     {
         int value = 0;
 

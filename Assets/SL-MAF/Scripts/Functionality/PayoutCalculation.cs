@@ -17,7 +17,7 @@ public class PayoutCalculation : MonoBehaviour
     [SerializeField]
     private GameObject[] Lines_Object;
 
-    internal int LineCount;
+    private int LineCount;
 
     internal int currrentLineIndex = 9;
 
@@ -49,7 +49,7 @@ public class PayoutCalculation : MonoBehaviour
         }
     }
 
-    internal void ResetStaticLine()
+    private void ResetStaticLine()
     {
         if (TempObj != null)
         {

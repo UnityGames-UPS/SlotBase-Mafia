@@ -147,7 +147,7 @@ public class SlotBehaviour : MonoBehaviour
 
     private bool StopSpinToggle;
     private bool IsTurboOn;
-    internal bool WasAutoSpinOn;
+    private bool WasAutoSpinOn;
     private float SpinDelay = 0.2f;
 
     private bool CheckSpinAudio = false;
@@ -415,7 +415,7 @@ public class SlotBehaviour : MonoBehaviour
     //    PopulateSlot(myvalues, number);
     //}
 
-    internal void LayoutReset(int number)
+    private void LayoutReset(int number)
     {
         if (Slot_Elements[number]) Slot_Elements[number].ignoreLayout = true;
         if (SlotStart_Button) SlotStart_Button.interactable = true;
